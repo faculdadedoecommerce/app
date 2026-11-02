@@ -36,7 +36,7 @@ var SHIM = '<script>var API_FAECOM=' + JSON.stringify(API) + ';' +
   'RunFaecom_.prototype.withFailureHandler=function(f){return new RunFaecom_(this.s,f)};' +
   'RunFaecom_.prototype.login=function(u,p){chamarApi_("login",{u:u,p:p},this.s,this.f)};' +
   'RunFaecom_.prototype.atualizar=function(t){chamarApi_("atualizar",{t:t},this.s,this.f)};' +
-  'RunFaecom_.prototype.salvarLogo=function(t,l,i){chamarApi_("salvarLogo",{t:t,lid:l,img:i},this.s,this.f)};' +
+  'RunFaecom_.prototype.salvarLogo=function(t,l,i,x){chamarApi_("salvarLogo",{t:t,lid:l,img:i,arq:x},this.s,this.f)};' +
   'var google={script:{run:new RunFaecom_()}};' +
   'if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){})}' +
   '<\/script>';
