@@ -32,12 +32,13 @@ var META = '<meta name="viewport" content="width=device-width, initial-scale=1, 
 var SHIM = '<script>var API_FAECOM=' + JSON.stringify(API) + ';' +
   'function chamarApi_(a,x,ok,f){fetch(API_FAECOM,{method:"POST",body:JSON.stringify(Object.assign({acao:a},x))}).then(function(r){return r.json()}).then(function(j){if(j.ok)ok(j.r);else f(new Error(j.erro||"Erro"))}).catch(function(){f(new Error("Sem conexão com o servidor. Verifique a internet e tente de novo."))})}' +
   'function RunFaecom_(s,f){this.s=s||function(){};this.f=f||function(){}}' +
-  'RunFaecom_.prototype.withSuccessHandler=function(s){return new RunFaecom_(s,this.f)};' +
-  'RunFaecom_.prototype.withFailureHandler=function(f){return new RunFaecom_(this.s,f)};' +
   'RunFaecom_.prototype.login=function(u,p){chamarApi_("login",{u:u,p:p},this.s,this.f)};' +
   'RunFaecom_.prototype.atualizar=function(t){chamarApi_("atualizar",{t:t},this.s,this.f)};' +
   'RunFaecom_.prototype.salvarLogo=function(t,l,i,x){chamarApi_("salvarLogo",{t:t,lid:l,img:i,arq:x},this.s,this.f)};' +
-  'var google={script:{run:new RunFaecom_()}};' +
+  'function mkRun_(s,f){var o=new RunFaecom_(s,f);return typeof Proxy==="undefined"?o:new Proxy(o,{get:function(t,k){if(k in t)return t[k];return function(){chamarApi_("call",{f:k,args:[].slice.call(arguments)},t.s,t.f)}}})}' +
+  'RunFaecom_.prototype.withSuccessHandler=function(s){return mkRun_(s,this.f)};' +
+  'RunFaecom_.prototype.withFailureHandler=function(f){return mkRun_(this.s,f)};' +
+  'var google={script:{run:mkRun_()}};' +
   'if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){})}' +
   '<\/script>';
 function montar(h) {
