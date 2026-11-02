@@ -60,8 +60,9 @@ function erro() {
 }
 var cache = null;
 try { cache = localStorage.getItem('faecom_tela'); } catch (e) {}
-if (cache) { buscar().catch(function () {}); abrir(cache); }
-else { buscar().then(abrir).catch(erro); }
+// abre só depois que a casca terminou de carregar, pra tela do painel substituir a casca (e não ficar por baixo)
+if (cache) { buscar().catch(function () {}); window.addEventListener('load', function () { abrir(cache); }); }
+else { buscar().then(function (x) { if (document.readyState === 'complete') abrir(x); else window.addEventListener('load', function () { abrir(x); }); }).catch(erro); }
 </script>
 </body>
 </html>
