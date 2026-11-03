@@ -19,7 +19,7 @@ self.addEventListener('push', e => {
       if (!m.length) return self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC));
       return Promise.all(m.slice(-3).map(x => self.registration.showNotification(x.t || 'Faecom', Object.assign({ body: x.b || '', tag: String(x.ts || Date.now()), data: { u: x.u || '/' } }, OPC))));
     })
-    .catch(() => self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC)));
+    .catch(() => self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC))));
 });
 self.addEventListener('notificationclick', e => {
   e.notification.close();
