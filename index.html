@@ -63,7 +63,22 @@ function erro() {
 var cache = null;
 try { cache = localStorage.getItem('faecom_tela'); } catch (e) {}
 // abre só depois que a casca terminou de carregar, pra tela do painel substituir a casca (e não ficar por baixo)
-if (cache) { buscar().catch(function () {}); window.addEventListener('load', function () { abrir(cache); }); }
+// Atualização automática: se o painel mudou desde a última abertura, avisa na hora (sem reinstalar o app).
+function aviso() {
+  setTimeout(function () {
+    if (document.getElementById('faecom-nova')) return;
+    var b = document.createElement('div'); b.id = 'faecom-nova';
+    b.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:9999;background:#2AD2C9;color:#061743;font:700 14px -apple-system,system-ui,sans-serif;padding:11px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer;max-width:calc(100% - 24px);text-align:center';
+    b.textContent = '✨ Nova versão do app · toque para atualizar';
+    b.onclick = function () { location.reload(); };
+    document.body.appendChild(b);
+  }, 300);
+}
+if (cache) {
+  var novo = null, aberto = false;
+  buscar().then(function (x) { if (x !== cache) { novo = x; if (aberto) aviso(); } }).catch(function () {});
+  window.addEventListener('load', function () { abrir(cache); aberto = true; if (novo) aviso(); });
+}
 else { buscar().then(function (x) { if (document.readyState === 'complete') abrir(x); else window.addEventListener('load', function () { abrir(x); }); }).catch(erro); }
 </script>
 </body>

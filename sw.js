@@ -1,5 +1,5 @@
 // App Faecom: guarda só a "casca" (ícones e esta página); dados e tela vêm sempre da API
-const CACHE = 'faecom-casca-v4';
+const CACHE = 'faecom-casca-v5';
 const API = 'https://api.faecom.com.br';
 const CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CASCA))); self.skipWaiting(); });
@@ -19,7 +19,7 @@ self.addEventListener('push', e => {
       if (!m.length) return self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC));
       return Promise.all(m.slice(-3).map(x => self.registration.showNotification(x.t || 'Faecom', Object.assign({ body: x.b || '', tag: String(x.ts || Date.now()), data: { u: x.u || '/' } }, OPC))));
     })
-    .catch(() => self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC))));
+    .catch(() => self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC)));
 });
 self.addEventListener('notificationclick', e => {
   e.notification.close();
