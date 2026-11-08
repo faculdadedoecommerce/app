@@ -1,5 +1,5 @@
 // App Faecom: guarda só a "casca" (ícones e esta página); dados e tela vêm sempre da API
-const CACHE = 'faecom-casca-v5';
+const CACHE = 'faecom-casca-v6';
 const API = 'https://api.faecom.com.br';
 const CASCA = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CASCA))); self.skipWaiting(); });
@@ -16,10 +16,10 @@ self.addEventListener('push', e => {
     .then(s => s ? fetch(API + '/push/pull', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ep: s.endpoint }) }).then(r => r.json()) : { msgs: [] })
     .then(j => {
       const m = (j && j.msgs) || [];
-      if (!m.length) return self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC));
-      return Promise.all(m.slice(-3).map(x => self.registration.showNotification(x.t || 'Faecom', Object.assign({ body: x.b || '', tag: String(x.ts || Date.now()), data: { u: x.u || '/' } }, OPC))));
+      if (!m.length) return self.registration.showNotification('Faê', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC));
+      return Promise.all(m.slice(-3).map(x => self.registration.showNotification(x.t || 'Faê', Object.assign({ body: x.b || '', tag: String(x.ts || Date.now()), data: { u: x.u || '/' } }, OPC))));
     })
-    .catch(() => self.registration.showNotification('Faecom', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC))));
+    .catch(() => self.registration.showNotification('Faê', Object.assign({ body: 'Você tem novidades nas suas lojas.', data: { u: '/' } }, OPC))));
 });
 self.addEventListener('notificationclick', e => {
   e.notification.close();

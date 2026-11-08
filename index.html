@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Faecom · Painel de Resultados</title>
+<title>Faê</title>
 <meta name="description" content="Painel de resultados dos clientes da Faculdade do E-commerce">
 <meta name="theme-color" content="#0a1f5c">
 <link rel="manifest" href="manifest.webmanifest">
@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Faecom">
+<meta name="apple-mobile-web-app-title" content="Faê">
 <style>
 html,body{margin:0;height:100%;background:#0a1f5c}
 #sp{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;color:#d9e6ff;background:linear-gradient(180deg,#0a1f5c,#0032a0);text-align:center;padding:24px}
@@ -24,11 +24,11 @@ html,body{margin:0;height:100%;background:#0a1f5c}
 </style>
 </head>
 <body>
-<div id="sp"><img src="icon-512.png" alt="Faecom"><div class="b" id="bar"></div><p id="msg"></p></div>
+<div id="sp"><img src="icon-512.png" alt="Faê"><div class="b" id="bar"></div><p id="msg"></p></div>
 <script>
 // App Faecom: a tela vem sempre atualizada do painel (Apps Script); este arquivo é só a "casca" instalável.
 var API = 'https://script.google.com/macros/s/AKfycbwFZ-lx97m5vrXCwIbraJ3YaPPhQMQSkcGcedBCYXuk4INFuNk5kQcj0SBHM-OHmT72ag/exec';
-var META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Faecom · Painel de Resultados</title><meta name="theme-color" content="#0a1f5c"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Faecom">';
+var META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Faê</title><meta name="theme-color" content="#0a1f5c"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Faecom">';
 var SHIM = '<script>var API_FAECOM=' + JSON.stringify(API) + ';' +
   'function chamarApi_(a,x,ok,f){fetch(API_FAECOM,{method:"POST",body:JSON.stringify(Object.assign({acao:a},x))}).then(function(r){return r.json()}).then(function(j){if(j.ok)ok(j.r);else f(new Error(j.erro||"Erro"))}).catch(function(){f(new Error("Sem conexão com o servidor. Verifique a internet e tente de novo."))})}' +
   'function RunFaecom_(s,f){this.s=s||function(){};this.f=f||function(){}}' +
