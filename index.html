@@ -27,6 +27,91 @@ html,body{margin:0;height:100%;background:#0a1f5c}
 <div id="sp"><img src="icon-512.png" alt="Faê"><div class="b" id="bar"></div><p id="msg"></p></div>
 <script>
 // App Faecom: a tela vem sempre atualizada do painel (Apps Script); este arquivo é só a "casca" instalável.
+var API = 'https://script.google.com/macros/s/AKfycbxbB0Hl9TjqMwbbHkkpR-1JxRyMPXf1aMVrXbyHL7JXmh-jFsdQIZUiCiMB4V7cgnQUYg/exec';
+var META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Faê</title><meta name="theme-color" content="#0a1f5c"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Faecom">';
+var SHIM = '<script>var API_FAECOM=' + JSON.stringify(API) + ';' +
+  'function chamarApi_(a,x,ok,f){fetch(API_FAECOM,{method:"POST",body:JSON.stringify(Object.assign({acao:a},x))}).then(function(r){return r.json()}).then(function(j){if(j.ok)ok(j.r);else f(new Error(j.erro||"Erro"))}).catch(function(){f(new Error("Sem conexão com o servidor. Verifique a internet e tente de novo."))})}' +
+  'function RunFaecom_(s,f){this.s=s||function(){};this.f=f||function(){}}' +
+  'RunFaecom_.prototype.login=function(u,p){chamarApi_("login",{u:u,p:p},this.s,this.f)};' +
+  'RunFaecom_.prototype.atualizar=function(t){chamarApi_("atualizar",{t:t},this.s,this.f)};' +
+  'RunFaecom_.prototype.salvarLogo=function(t,l,i,x){chamarApi_("salvarLogo",{t:t,lid:l,img:i,arq:x},this.s,this.f)};' +
+  'function mkRun_(s,f){var o=new RunFaecom_(s,f);return typeof Proxy==="undefined"?o:new Proxy(o,{get:function(t,k){if(k in t)return t[k];return function(){chamarApi_("call",{f:k,args:[].slice.call(arguments)},t.s,t.f)}}})}' +
+  'RunFaecom_.prototype.withSuccessHandler=function(s){return mkRun_(s,this.f)};' +
+  'RunFaecom_.prototype.withFailureHandler=function(f){return mkRun_(this.s,f)};' +
+  'var google={script:{run:mkRun_()}};' +
+  'if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){})}' +
+  '<\/script>';
+function montar(h) {
+  h = h.replace(/sessionStorage/g, 'localStorage');
+  var i = h.indexOf('<head>');
+  return i < 0 ? META + SHIM + h : h.slice(0, i + 6) + META + SHIM + h.slice(i + 6);
+}
+function abrir(h) { document.open(); document.write(montar(h)); document.close(); }
+function buscar() {
+  return fetch(API, { method: 'POST', body: JSON.stringify({ acao: 'pagina' }) })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j.ok || !j.r || !j.r.html) throw new Error('resposta');
+      try { localStorage.setItem('faecom_tela', j.r.html); } catch (e) {}
+      return j.r.html;
+    });
+}
+function erro() {
+  document.getElementById('bar').style.display = 'none';
+  document.getElementById('msg').innerHTML = 'Não foi possível carregar o painel.<br>Verifique sua internet.<br><br><button onclick="location.reload()">Tentar de novo</button>';
+}
+var cache = null;
+try { cache = localStorage.getItem('faecom_tela'); } catch (e) {}
+// abre só depois que a casca terminou de carregar, pra tela do painel substituir a casca (e não ficar por baixo)
+// Atualização automática: se o painel mudou desde a última abertura, avisa na hora (sem reinstalar o app).
+function aviso() {
+  setTimeout(function () {
+    if (document.getElementById('faecom-nova')) return;
+    var b = document.createElement('div'); b.id = 'faecom-nova';
+    b.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:9999;background:#2AD2C9;color:#061743;font:700 14px -apple-system,system-ui,sans-serif;padding:11px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer;max-width:calc(100% - 24px);text-align:center';
+    b.textContent = '✨ Nova versão do app · toque para atualizar';
+    b.onclick = function () { location.reload(); };
+    document.body.appendChild(b);
+  }, 300);
+}
+if (cache) {
+  var novo = null, aberto = false;
+  buscar().then(function (x) { if (x !== cache) { novo = x; if (aberto) aviso(); } }).catch(function () {});
+  window.addEventListener('load', function () { abrir(cache); aberto = true; if (novo) aviso(); });
+}
+else { buscar().then(function (x) { if (document.readyState === 'complete') abrir(x); else window.addEventListener('load', function () { abrir(x); }); }).catch(erro); }
+</script>
+</body>
+</html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faê</title>
+<meta name="description" content="Painel de resultados dos clientes da Faculdade do E-commerce">
+<meta name="theme-color" content="#0a1f5c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Faê">
+<style>
+html,body{margin:0;height:100%;background:#0a1f5c}
+#sp{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;color:#d9e6ff;background:linear-gradient(180deg,#0a1f5c,#0032a0);text-align:center;padding:24px}
+#sp img{width:132px;height:132px;border-radius:28px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#sp .b{height:4px;border-radius:4px;background:#2AD2C9;animation:p .9s ease-in-out infinite alternate}
+@keyframes p{from{width:28px;opacity:.35}to{width:64px;opacity:1}}
+#sp p{margin:0;font-size:15px;max-width:300px;line-height:1.45}
+#sp button{padding:12px 22px;border:0;border-radius:12px;background:#2AD2C9;color:#0a1f5c;font-weight:700;font-size:16px}
+</style>
+</head>
+<body>
+<div id="sp"><img src="icon-512.png" alt="Faê"><div class="b" id="bar"></div><p id="msg"></p></div>
+<script>
+// App Faecom: a tela vem sempre atualizada do painel (Apps Script); este arquivo é só a "casca" instalável.
 var API = 'https://script.google.com/macros/s/AKfycbwFZ-lx97m5vrXCwIbraJ3YaPPhQMQSkcGcedBCYXuk4INFuNk5kQcj0SBHM-OHmT72ag/exec';
 var META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Faê</title><meta name="theme-color" content="#0a1f5c"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Faecom">';
 var SHIM = '<script>var API_FAECOM=' + JSON.stringify(API) + ';' +
